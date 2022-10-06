@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysecret
+    volumes:
+      - mysqldata:/var/lib/mysql
+    ports:
+      - "3010:3316"
+    networks:
+      - mysqlnet
+    restart: on-failure
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    depends_on:
+      - mysql
+    ports:
+      - "8090:8090"
+    networks:
+      - mysqlnet
+    restart: on-failure
+
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=mysecret
+      - POSTGRES_USER=admin
+    
+    ports:
+      - "3011:5442"
+    networks:
+      - mysqlnet
+    restart: on-failure
+  
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "3012:5442"
+    networks:
+      - mysqlnet
+    restart: on-failure
+    
+  
+  
+
+volumes:
+  mysqldata:
+
+networks:
+  mysqlnet:
